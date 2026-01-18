@@ -1,9 +1,20 @@
-import React from 'react'
+import React from "react";
+import Navbar from "./components/layout/Navbar";
+import Login from "./pages/auth/Login";
+import { Toaster } from "react-hot-toast";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./components/layout/Layout";
 
 const App = () => {
   return (
-    <div className='text-3xl text-red-500'>App</div>
-  )
-}
+    <>
+      <Toaster position="top-right" reverseOrder={false} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Layout />}></Route>
+      </Routes>
+    </>
+  );
+};
 
-export default App
+export default App;

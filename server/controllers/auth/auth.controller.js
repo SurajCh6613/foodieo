@@ -4,8 +4,11 @@ import Email from "../../utils/email.js";
 import { generateOtp } from "../../helper/generateOtp.js";
 import otpModel from "../../models/auth/otp.model.js";
 import { generateAccessToken, generateRefeshToken } from "../../utils/token.js";
+import { oauth2client } from "../../config/OAuth/googleOAuth.js";
+import axios from "axios";
 
 export const userRegister = async (req, res) => {
+  console.log(req.body);
   const { fullName, email, password, role } = req.body;
   if (!fullName || !email || !password || !role) {
     return res
@@ -32,6 +35,15 @@ export const userRegister = async (req, res) => {
     userId: user._id,
     otp,
   });
+
+  user = user.toObject();
+  delete user?.updatedAt;
+  delete user?.createdAt;
+  delete user?.isEmailVerified;
+  delete user?.password;
+  delete user?._id;
+  delete user?.__v;
+
   const emailService = new Email(user);
   await emailService.sendOtp(otp);
   return res.status(201).json({
@@ -84,6 +96,14 @@ export const userLogin = async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
+  user = user.toObject();
+  delete user?.updatedAt;
+  delete user?.createdAt;
+  delete user?.isEmailVerified;
+  delete user?.password;
+  delete user?._id;
+  delete user?.__v;
+
   res
     .status(201)
     .json({ success: true, message: "User Logged-in Successfully.", user });
@@ -115,7 +135,68 @@ export const verfyOtp = async (req, res) => {
   const emailService = new Email(user);
   await emailService.sendWelcome();
 
+  user = user.toObject();
+  delete user?.updatedAt;
+  delete user?.createdAt;
+  delete user?.isEmailVerified;
+  delete user?.password;
+  delete user?._id;
+  delete user?.__v;
+
   res
     .status(201)
     .json({ success: true, message: "Email Verified Successfully.", user });
+};
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { code, role } = req.body;
+    const googleResponse = await oauth2client.getToken(code);
+
+    const { data } = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleResponse?.tokens?.access_token}`,
+    );
+
+    const { email, name } = data;
+
+    let user = await userModel.findOne({ email });
+    if (!user) {
+      user = await userModel.create({ email, fullName: name, role });
+    }
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefeshToken(user);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    user.isEmailVerified = true;
+    await user.save();
+
+    user = user.toObject();
+    delete user?.updatedAt;
+    delete user?.createdAt;
+    delete user?.isEmailVerified;
+    delete user?.password;
+    delete user?._id;
+    delete user?.__v;
+    return res
+      .status(200)
+      .json({ success: true, message: "Logged-in successfully.", user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Google Login Failed" });
+  }
 };

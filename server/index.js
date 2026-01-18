@@ -5,7 +5,6 @@ import { connectDB } from "./utils/connectDB.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import indexRouter from "./routes/index.router.js";
-import mongoose from "mongoose";
 
 const app = express();
 

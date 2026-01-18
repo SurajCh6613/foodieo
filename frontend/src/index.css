@@ -1,1 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
 @import "tailwindcss";
+
+
+
+@layer theme {
+    :root {
+        --background: 35 40% 98%;
+        --foreground: 20 20% 15%;
+
+        --primary: 16 100% 60%;
+        --primary-foreground: 0 0% 100%;
+
+        --secondary: 145 50% 45%;
+        --secondary-foreground: 0 0% 100%;
+
+        --border: 35 20% 88%;
+        --input: 35 20% 88%;
+        --ring: 16 100% 60%;
+
+
+        --gradient-hero: linear-gradient(135deg, hsl(16 100% 60%) 0%, hsl(45 100% 55%) 100%);
+        --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(35 40% 98%) 100%);
+        --gradient-green: linear-gradient(135deg, hsl(145 50% 45%) 0%, hsl(145 60% 55%) 100%);
+
+        --font-display: 'Playfair Display', serif;
+        --font-body: 'Poppins', sans-serif;
+    }
+}
+
+
+@layer base {
+    * {
+        @apply border-[--border]
+    }
+
+    body {
+        @apply bg-[--background] text-[--foreground];
+        font-family: var(--font-body);
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    span {
+        font-family: var(--font-display);
+    }
+}
+
+
+@layer utilities {
+    .gradient-bg {
+        background-image: var(--gradient-hero);
+    }
+}
