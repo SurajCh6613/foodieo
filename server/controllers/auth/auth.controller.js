@@ -144,7 +144,11 @@ export const googleLogin = async (req, res) => {
 
     let user = await userModel.findOne({ email });
     if (!user) {
-      user = await userModel.create({ email, fullName: name, role });
+      user = await userModel.create({
+        email,
+        fullName: name,
+        role: role || "user",
+      });
     }
 
     const accessToken = generateAccessToken(user);

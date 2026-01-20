@@ -168,3 +168,33 @@ export const getItemsByCity = async (req, res) => {
       .json({ success: false, message: "Delete Item failed" });
   }
 };
+
+export const getItemsByShop = async (req, res) => {
+  try {
+    const { shopId } = req.params;
+    if (!shopId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "ShopId is required." });
+    }
+    console.log(shopId);
+
+    const items = await Item.find({ shop: shopId }).sort({ updatedAt: -1 });
+
+    if (!items) {
+      return res
+        .status(400)
+        .json({ success: true, message: "No Items found", items: [] });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Item fetch successfully",
+      items,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Find Shop Items failed" });
+  }
+};

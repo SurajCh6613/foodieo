@@ -142,3 +142,29 @@ export const deleteShop = async (req, res) => {
       .json({ success: false, message: "Failed to Delete Shop" });
   }
 };
+
+export const getMyShop = async (req, res) => {
+  try {
+    const { userId, role } = req.user;
+    if (!userId || role !== "owner") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Unauthorized User" });
+    }
+
+    let shop = await Shop.findOne({ owner: userId });
+    if (!shop) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No Shop found!" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Shop fetched Successfully.", shop });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to Fetch Shop" });
+  }
+};
