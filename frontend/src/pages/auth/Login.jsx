@@ -23,7 +23,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -161,7 +161,6 @@ const Login = () => {
 
   //   Google Login
   const responseGoogle = async (authResponse) => {
-    setLoading(true);
     try {
       if (authResponse?.code) {
         const { data } = await api.post("auth/googleLogin", {
@@ -176,8 +175,6 @@ const Login = () => {
     } catch (error) {
       toast.error("Google login failed.");
       console.log("Google Login failed", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -203,7 +200,7 @@ const Login = () => {
     },
   ];
   return (
-    <div className="min-h-screen bg-linear-to-r from-amber-100 to-amber-200 flex">
+    <div className="min-h-screen  flex">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=')] opacity-50"></div>
@@ -255,7 +252,7 @@ const Login = () => {
           {/* Back Button */}
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Home
@@ -271,7 +268,7 @@ const Login = () => {
             </span>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-4">
             <h2 className="text-2xl font-display font-bold text-foreground mb-2">
               {otpSent
                 ? "Verify Account"
@@ -326,7 +323,7 @@ const Login = () => {
             onSubmit={
               otpSent ? handleVerifyOtp : isLogin ? handleLogin : handleRegister
             }
-            className="space-y-5"
+            className="space-y-3"
           >
             {!isLogin && !otpSent && (
               <div>
@@ -336,7 +333,7 @@ const Login = () => {
                 >
                   Full Name
                 </label>
-                <div className="relative mt-1.5">
+                <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
                     id="name"
@@ -357,7 +354,7 @@ const Login = () => {
               >
                 Email Address
               </label>
-              <div className="relative mt-1.5">
+              <div className="relative ">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="email"
@@ -378,7 +375,7 @@ const Login = () => {
                 >
                   OTP
                 </label>
-                <div className="relative mt-1.5">
+                <div className="relative">
                   <input
                     id="text"
                     type="text"
@@ -399,7 +396,7 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <div className="relative mt-1.5">
+                <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
                     id="password"
@@ -475,13 +472,9 @@ const Login = () => {
               }
               handleGoogleLogin();
             }}
-            className="w-full gradient-bg py-2 cursor-pointer"
+            className="w-full gradient-bg py-2 cursor-pointer mt-2"
           >
-            {loading ? (
-              <ProcessingLoader className="w-6 h-6" />
-            ) : (
-              "Google Login"
-            )}
+            Google Login
           </button>
         </div>
       </div>

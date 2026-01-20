@@ -1,56 +1,188 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
 @import "tailwindcss";
 
-
-
-@layer theme {
-    :root {
-        --background: 35 40% 98%;
-        --foreground: 20 20% 15%;
-
-        --primary: 16 100% 60%;
-        --primary-foreground: 0 0% 100%;
-
-        --secondary: 145 50% 45%;
-        --secondary-foreground: 0 0% 100%;
-
-        --border: 35 20% 88%;
-        --input: 35 20% 88%;
-        --ring: 16 100% 60%;
-
-
-        --gradient-hero: linear-gradient(135deg, hsl(16 100% 60%) 0%, hsl(45 100% 55%) 100%);
-        --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(35 40% 98%) 100%);
-        --gradient-green: linear-gradient(135deg, hsl(145 50% 45%) 0%, hsl(145 60% 55%) 100%);
-
-        --font-display: 'Playfair Display', serif;
-        --font-body: 'Poppins', sans-serif;
-    }
-}
-
+/* ============================= */
+/* DESIGN TOKENS (THEME COLORS) */
+/* ============================= */
 
 @layer base {
-    * {
-        @apply border-[--border]
-    }
+  :root {
+    /* Core Colors */
+    --background: 35 40% 98%;
+    --foreground: 20 20% 15%;
 
-    body {
-        @apply bg-[--background] text-[--foreground];
-        font-family: var(--font-body);
-    }
+    --card: 0 0% 100%;
+    --card-foreground: 20 20% 15%;
 
-    h1,
-    h2,
-    h3,
-    p,
-    span {
-        font-family: var(--font-display);
-    }
+    --primary: 16 100% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 145 50% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 35 20% 92%;
+    --muted-foreground: 20 10% 45%;
+
+    --accent: 45 100% 55%;
+    --accent-foreground: 20 20% 15%;
+
+    --destructive: 0 84% 60%;
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
+    --ring: 16 100% 60%;
+
+    --radius: 0.75rem;
+
+    /* Custom Foodie Tokens */
+    --coral: 16 100% 60%;
+    --green: 145 50% 45%;
+    --cream: 35 40% 96%;
+    --golden: 45 100% 55%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg,
+        hsl(16 100% 60%) 0%,
+        hsl(45 100% 55%) 100%);
+
+    --gradient-card: linear-gradient(180deg,
+        hsl(0 0% 100%) 0%,
+        hsl(35 40% 98%) 100%);
+
+    --gradient-green: linear-gradient(135deg,
+        hsl(145 50% 45%) 0%,
+        hsl(145 60% 55%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(16 100% 60% / 0.15);
+    --shadow-card: 0 8px 30px -8px hsl(20 20% 15% / 0.1);
+    --shadow-elevated: 0 20px 50px -15px hsl(20 20% 15% / 0.15);
+
+    /* Fonts */
+    --font-display: "Playfair Display", serif;
+    --font-body: "Poppins", sans-serif;
+  }
+
+  /* Dark Mode */
+  .dark {
+    --background: 20 20% 8%;
+    --foreground: 35 20% 95%;
+
+    --card: 20 20% 12%;
+    --card-foreground: 35 20% 95%;
+
+    --muted: 20 15% 18%;
+    --muted-foreground: 35 10% 60%;
+
+    --border: 20 15% 20%;
+    --input: 20 15% 20%;
+  }
+}
+
+/* ============================= */
+/* BASE STYLES */
+/* ============================= */
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    font-family: var(--font-body);
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    font-family: var(--font-display);
+  }
 }
 
 
 @layer utilities {
-    .gradient-bg {
-        background-image: var(--gradient-hero);
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
     }
+
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+
+@layer utilities {
+
+  /* Text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-hero);
+  }
+
+  /* Backgrounds */
+  .bg-gradient-hero {
+    background-image: var(--gradient-hero);
+  }
+
+
+  .bg-gradient-green {
+    background-image: var(--gradient-green);
+  }
+
+  /* Shadows */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* Animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+  }
+
+  /* Layout Helpers */
+  .section-padding {
+    @apply py-16 px-8;
+  }
 }
