@@ -1,9 +1,12 @@
-import express, { Router } from "express";
-import { getUserProfile } from "../../controllers/user/user.controller.js";
-import { authUser } from "../../middlewares/auth/authUser.js";
+import express from "express";
+import {
+  getUserProfile,
+  updateUserProfile,
+} from "../../controllers/user/user.controller.js";
 
 const userRouter = express.Router();
 
-userRouter.get("/me", authUser, getUserProfile);
+userRouter.get("/me", getUserProfile);
+userRouter.put("/update", updateUserProfile);
 
 export default userRouter;

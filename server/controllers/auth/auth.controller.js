@@ -6,6 +6,7 @@ import otpModel from "../../models/auth/otp.model.js";
 import { generateAccessToken, generateRefeshToken } from "../../utils/token.js";
 import { oauth2client } from "../../config/OAuth/googleOAuth.js";
 import axios from "axios";
+import normalizeUser from "../../helper/normalizeUser.js";
 
 export const userRegister = async (req, res) => {
   console.log(req.body);
@@ -36,13 +37,7 @@ export const userRegister = async (req, res) => {
     otp,
   });
 
-  user = user.toObject();
-  delete user?.updatedAt;
-  delete user?.createdAt;
-  delete user?.isEmailVerified;
-  delete user?.password;
-  delete user?._id;
-  delete user?.__v;
+  user = normalizeUser(user);
 
   const emailService = new Email(user);
   await emailService.sendOtp(otp);
@@ -85,24 +80,18 @@ export const userLogin = async (req, res) => {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "strict",
+    sameSite: "lax",
     maxAge: 24 * 60 * 60 * 1000,
   });
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: "strict",
+    sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
-  user = user.toObject();
-  delete user?.updatedAt;
-  delete user?.createdAt;
-  delete user?.isEmailVerified;
-  delete user?.password;
-  delete user?._id;
-  delete user?.__v;
+  user = normalizeUser(user);
 
   res
     .status(201)
@@ -135,13 +124,7 @@ export const verfyOtp = async (req, res) => {
   const emailService = new Email(user);
   await emailService.sendWelcome();
 
-  user = user.toObject();
-  delete user?.updatedAt;
-  delete user?.createdAt;
-  delete user?.isEmailVerified;
-  delete user?.password;
-  delete user?._id;
-  delete user?.__v;
+  user = normalizeUser(user);
 
   res
     .status(201)
@@ -170,27 +153,22 @@ export const googleLogin = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     user.isEmailVerified = true;
     await user.save();
 
-    user = user.toObject();
-    delete user?.updatedAt;
-    delete user?.createdAt;
-    delete user?.isEmailVerified;
-    delete user?.password;
-    delete user?._id;
-    delete user?.__v;
+    user = normalizeUser(user);
+
     return res
       .status(200)
       .json({ success: true, message: "Logged-in successfully.", user });
@@ -198,5 +176,27 @@ export const googleLogin = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Google Login Failed" });
+  }
+};
+
+export const userLogout = async (req, res) => {
+  try {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    return res
+      .status(200)
+      .json({ success: true, message: "User logged out successfully." });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };
