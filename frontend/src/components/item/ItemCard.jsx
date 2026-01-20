@@ -1,8 +1,10 @@
 import { useState } from "react";
 import DeleteItemModal from "./DeleteItemModal";
+import EditItemModal from "./EditItemModal";
 
 const ItemCard = ({ item }) => {
   const [deleteItemId, setDeleteItemId] = useState(null);
+  const [editItem, setEditItem] = useState(null);
   return (
     <div className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
       {/* Image */}
@@ -31,7 +33,10 @@ const ItemCard = ({ item }) => {
 
         {/* Action Button */}
         <div className="flex gap-2">
-          <button className="px-3 py-1 bg-gradient-green text-white cursor-pointer">
+          <button
+            onClick={() => setEditItem(item)}
+            className="px-3 py-1 bg-gradient-green text-white cursor-pointer"
+          >
             Edit
           </button>
           <button
@@ -49,6 +54,8 @@ const ItemCard = ({ item }) => {
           setDeleteItemId={setDeleteItemId}
         />
       )}
+
+      {editItem && <EditItemModal item={editItem} setEditItem={setEditItem} />}
     </div>
   );
 };

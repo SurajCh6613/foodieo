@@ -44,7 +44,6 @@ const OwnerDashboard = () => {
     }
   };
 
-  console.log(items);
 
   useEffect(() => {
     fetchShop();

@@ -185,7 +185,7 @@ const Login = () => {
   });
 
   const roles = [
-    { id: "user", icon: Users, label: "Customer", color: "gradient-bg" },
+    { id: "user", icon: Users, label: "Customer", color: "bg-gradient-hero" },
     {
       id: "owner",
       icon: ChefHat,
@@ -196,13 +196,17 @@ const Login = () => {
       id: "deliveryBoy",
       icon: Bike,
       label: "Delivery Boy",
-      color: "gradient-bg",
+      color: "bg-gradient-hero",
     },
   ];
   return (
-    <div className="min-h-screen  flex">
+    <div className={`min-h-screen  flex transition duration-300`}>
       {/* Left Panel - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero relative overflow-hidden">
+      <div
+        className={`hidden lg:flex lg:w-1/2 bg-gradient-hero relative overflow-hidden
+  transition-all duration-500 ease-in-out
+  ${isLogin ? "translate-x-0 opacity-100" : "translate-x-full opacity-100"}`}
+      >
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=')] opacity-50"></div>
         <div className="relative z-10 flex flex-col justify-center items-center text-center p-12">
           <Link to="/" className="flex items-center gap-3 mb-8">
@@ -247,7 +251,11 @@ const Login = () => {
       </div>
 
       {/* Right Panel - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12">
+      <div
+        className={`w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12
+  transition-all duration-500 ease-in-out
+  ${isLogin ? "translate-x-0 opacity-100" : "-translate-x-full opacity-100"}`}
+      >
         <div className="w-full max-w-md">
           {/* Back Button */}
           <Link
@@ -436,7 +444,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full gradient-bg py-2 cursor-pointer"
+              className="w-full bg-gradient-hero py-2 cursor-pointer"
             >
               {loading ? (
                 <ProcessingLoader className="w-6 h-6" />
@@ -472,9 +480,9 @@ const Login = () => {
               }
               handleGoogleLogin();
             }}
-            className="w-full gradient-bg py-2 cursor-pointer mt-2"
+            className="w-full bg-gradient-hero py-2 cursor-pointer mt-2"
           >
-            Google Login
+             {isLogin ? "Google Login" : "Google Register"}
           </button>
         </div>
       </div>

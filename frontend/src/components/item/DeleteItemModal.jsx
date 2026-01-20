@@ -1,10 +1,37 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { setItems } from "../../store/slices/owner.slice";
+import { useDispatch, useSelector } from "react-redux";
+import api from "../../network/banckend";
 
 const DeleteItemModal = ({ deleteItemId, setDeleteItemId }) => {
   const [loading, setLoading] = useState(false);
-  console.log(deleteItemId);
-  const handleDeleteItem = async (itemId) => {};
+  const dispatch = useDispatch();
+  const { items } = useSelector((state) => state.owner);
+
+  const handleDeleteItem = async (itemId) => {
+    if (!itemId) {
+      toast.error("ItemId is required.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { data } = await api.delete(`/item/delete/${itemId}`);
+      if (data.success) {
+        const filteredItems = items.filter((item) => item?._id !== itemId);
+        toast.success("item Deleted Successfully.");
+        dispatch(setItems(filteredItems));
+        setDeleteItemId(null);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to delete item");
+      console.log("Failed to item shop:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}

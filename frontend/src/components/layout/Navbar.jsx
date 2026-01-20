@@ -70,10 +70,20 @@ const Navbar = () => {
       {/* Menus */}
       <div className="flex justify-center items-center gap-2">
         <IoCart size={22} className="text-yellow-500" />
+
+        {user && (
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="hidden md:flex px-2 py-1 cursor-pointer"
+          >
+            Dashboard
+          </button>
+        )}
+
         {!user ? (
           <button
             onClick={() => navigate("/login")}
-            className="gradient-bg hidden md:flex px-2 py-1 cursor-pointer"
+            className="bg-gradient-hero hidden md:flex px-2 py-1 cursor-pointer"
           >
             Sign In
           </button>
@@ -96,7 +106,7 @@ const Navbar = () => {
               className="absolute top-2 right-2"
             />
             <div className="flex flex-col">
-              <button>My Profile</button>
+              <button onClick={() => navigate("/dashboard")}>Dashboard</button>
               <button>My Orders</button>
               {!user ? (
                 <button

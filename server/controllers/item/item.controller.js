@@ -177,7 +177,6 @@ export const getItemsByShop = async (req, res) => {
         .status(400)
         .json({ success: false, message: "ShopId is required." });
     }
-    console.log(shopId);
 
     const items = await Item.find({ shop: shopId }).sort({ updatedAt: -1 });
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../../network/banckend";
+import category from "../../assets/category";
 
 const AddItem = () => {
   const [form, setForm] = useState({
@@ -72,10 +73,7 @@ const AddItem = () => {
     <div className=" mx-auto p-5">
       <h2 className="text-2xl font-bold mb-5">Add New Item</h2>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 shadow space-y-4"
-      >
+      <form onSubmit={handleSubmit} className="bg-white p-6 shadow space-y-4">
         {/* Item Name */}
         <div>
           <label className="block mb-1 font-medium">Item Name</label>
@@ -114,11 +112,11 @@ const AddItem = () => {
             required
           >
             <option value="">Select Category</option>
-            <option value="Burger">Burger</option>
-            <option value="pizza">Pizza</option>
-            <option value="biryani">Biryani</option>
-            <option value="snacks">Snacks</option>
-            <option value="drinks">Drinks</option>
+            {category.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 
