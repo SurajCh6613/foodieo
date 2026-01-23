@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../../network/banckend";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -11,39 +11,13 @@ const OwnerShop = () => {
   const dispatch = useDispatch();
 
   const [form, setForm] = useState({
-    name: "",
-    city: "",
-    address: "",
+    name: shop?.name || "",
+    city: shop?.city || "",
+    address: shop?.address || "",
+    image: null,
   });
 
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const fetchShop = async () => {
-    if (shop) return;
-    try {
-      const { data } = await api.get("/shop/my-shop");
-
-      if (data.success) {
-        dispatch(setShop(data.shop));
-      }
-    } catch (error) {
-      console.log("No Shop Found");
-    }
-  };
-
-  useEffect(() => {
-    fetchShop();
-    if (shop) {
-      setForm({
-        name: shop.name,
-        city: shop.city,
-        address: shop.address,
-      });
-      setPreview(shop.image.url);
-    }
-  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -51,11 +25,7 @@ const OwnerShop = () => {
 
   const handleImage = (e) => {
     const file = e.target.files[0];
-    setImage(file);
-
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
+    setForm({ ...form, image: file });
   };
 
   const handleSubmit = async (e) => {
@@ -69,8 +39,8 @@ const OwnerShop = () => {
       formData.append("city", form.city);
       formData.append("address", form.address);
 
-      if (image) {
-        formData.append("image", image);
+      if (form.image) {
+        formData.append("image", form.image);
       }
 
       let res;
@@ -89,7 +59,7 @@ const OwnerShop = () => {
 
       if (res?.data?.success) {
         toast.success(res?.data?.message);
-        fetchShop();
+        dispatch(setShop(res.data.shop));
         navigate(-1);
       }
     } catch (error) {
@@ -153,12 +123,14 @@ const OwnerShop = () => {
             type="file"
             accept="image/*"
             onChange={handleImage}
-            className="w-full border p-2"
+            className="w-full border p-2 cursor-pointer"
           />
 
-          {preview && (
+          {(form?.image || shop?.image) && (
             <img
-              src={preview}
+              src={
+                form.image ? URL.createObjectURL(form.image) : shop.image.url
+              }
               alt="preview"
               className="h-32 mt-3 object-cover"
             />

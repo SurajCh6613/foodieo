@@ -44,7 +44,6 @@ const OwnerDashboard = () => {
     }
   };
 
-
   useEffect(() => {
     fetchShop();
     if (shop) {
@@ -60,7 +59,7 @@ const OwnerDashboard = () => {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <DashboardCard title="Total Items" value="52" />
+          <DashboardCard title="Total Items" value={items.length || 0} />
           <DashboardCard title="Total Orders" value="132" />
           <DashboardCard title="Pending Orders" value="8" />
           <DashboardCard title="Revenue" value="₹45,000" />

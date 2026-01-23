@@ -11,6 +11,9 @@ import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { currentCity, user } = useSelector((state) => state.auth);
+  const totalCartItems = useSelector(
+    (state) => Object.keys(state.cart.cartItems).length,
+  );
   const dispatch = useDispatch();
   const [toggleMenu, setToggleMenu] = useState(false);
   const navigate = useNavigate();
@@ -36,12 +39,13 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScoll);
     return () => window.removeEventListener("scroll", handleScoll);
   }, []);
+
   return (
     <section
       className={`fixed w-full z-9998 flex justify-between items-center px-6 py-3  ${scrolled ? "bg-black/50 backdrop-blur-sm text-white" : ""}`}
     >
       {/* Logo */}
-      <div>
+      <div onClick={() => navigate("/")}>
         <h1 className="text-xl text-gradient flex items-center gap-1 hover:scale-102 duration-300 cursor-pointer">
           <IoRestaurant
             size={36}
@@ -69,7 +73,14 @@ const Navbar = () => {
 
       {/* Menus */}
       <div className="flex justify-center items-center gap-2">
-        <IoCart size={22} className="text-yellow-500" />
+        <div className="relative">
+          <IoCart size={36} className="text-yellow-500 " />
+          {totalCartItems !== 0 && (
+            <p className="absolute -top-1 right-0 bg-red-500 flex items-center justify-center text-white w-4 h-4 rounded-full">
+              {totalCartItems}
+            </p>
+          )}
+        </div>
 
         {user && (
           <button

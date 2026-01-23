@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import api from "../../network/banckend";
 import category from "../../assets/category";
 
 const AddItem = () => {
+  const fileInputRef = useRef(null);
   const [form, setForm] = useState({
     name: "",
     price: "",
     category: "",
     foodType: "",
+    image: null,
   });
 
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -24,17 +24,26 @@ const AddItem = () => {
 
   const handleImage = (e) => {
     const file = e.target.files[0];
-    setImage(file);
-
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
+    setForm({
+      ...form,
+      image: file,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      if (
+        !form.name ||
+        !form.price ||
+        !form.category ||
+        !form.foodType ||
+        !form.image
+      ) {
+        toast.error("All fields are requied.");
+        return;
+      }
       setLoading(true);
 
       const formData = new FormData();
@@ -42,13 +51,13 @@ const AddItem = () => {
       formData.append("price", form.price);
       formData.append("category", form.category);
       formData.append("foodType", form.foodType);
-      formData.append("image", image);
+      formData.append("image", form.image);
 
-      const res = await api.post("/item/add", formData, {
+      const { data } = await api.post("/item/add", formData, {
         headers: { "Content-Type": "multi-part/formdata" },
       });
 
-      if (res.data.success) {
+      if (data.success) {
         toast.success("Item Added Successfully");
 
         setForm({
@@ -56,10 +65,11 @@ const AddItem = () => {
           price: "",
           category: "",
           foodType: "",
+          image: null,
         });
-
-        setImage(null);
-        setPreview(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       }
     } catch (error) {
       console.log(error);
@@ -113,8 +123,8 @@ const AddItem = () => {
           >
             <option value="">Select Category</option>
             {category.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+              <option key={cat.label} value={cat.label}>
+                {cat.label}
               </option>
             ))}
           </select>
@@ -145,13 +155,14 @@ const AddItem = () => {
             type="file"
             accept="image/*"
             onChange={handleImage}
+            ref={fileInputRef}
             required
             className="border p-2 w-full"
           />
 
-          {preview && (
+          {form.image && (
             <img
-              src={preview}
+              src={URL.createObjectURL(form.image)}
               alt="preview"
               className="mt-3 h-32 object-cover"
             />

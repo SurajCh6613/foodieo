@@ -5,7 +5,7 @@ const myShopItems = JSON.parse(localStorage.getItem("my-shop-items"));
 
 const initialState = {
   shop: myShop || null,
-  items: [],
+  items: myShopItems || [],
 };
 
 const ownerSlice = createSlice({
@@ -14,13 +14,9 @@ const ownerSlice = createSlice({
   reducers: {
     setShop: (state, action) => {
       state.shop = action.payload;
-      if (action.payload)
-        localStorage.setItem("my-shop", JSON.stringify(action.payload));
     },
     setItems: (state, action) => {
       state.items = action.payload;
-      if (action.payload)
-        localStorage.setItem("my-shop-items", JSON.stringify(action.payload));
     },
   },
 });

@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import useGetCurrentCity from "./hooks/useGetCurrentCity";
-import Home from "./pages/Home";
+import About from "./pages/About";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
 import UserDashboard from "./pages/dashboards/user/UserDashboard";
@@ -13,6 +13,8 @@ import DeliveryBoyDashboard from "./pages/dashboards/DeliveryBoy/DeliveryBoyDash
 import DashboardNavigation from "./components/layout/DashboardNavigation";
 import OwnerShop from "./pages/owner/OwnerShop";
 import AddItem from "./pages/owner/AddItem";
+import Home from "./pages/Home";
+import MyProfile from "./pages/profile/MyProfile";
 
 const App = () => {
   useGetCurrentCity();
@@ -22,6 +24,8 @@ const App = () => {
       <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<About />} />
+
         <Route path="/" element={<Layout />}>
           <Route element={<ProtectedRoute />}>
             <Route index element={<Home />} />
@@ -42,6 +46,7 @@ const App = () => {
               />
               <Route path="my-shop" element={<OwnerShop />} />
               <Route path="add-item" element={<AddItem />} />
+              <Route path="my-profile" element={<MyProfile />} />
             </Route>
           </Route>
         </Route>

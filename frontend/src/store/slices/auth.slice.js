@@ -1,10 +1,11 @@
 import { createSlice, current } from "@reduxjs/toolkit";
+import { getFromStorage} from "../../helper/localeStorage";
 
-const localUser = JSON.parse(localStorage.getItem("user"));
+const localUser = getFromStorage("user");
 
 const initialState = {
   user: localUser || null,
-  currentCity: "Delhi",
+  currentCity: null,
 };
 
 const authSlice = createSlice({
@@ -13,7 +14,6 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      localStorage.setItem("user", JSON.stringify(action.payload));
     },
 
     setCurrentCity: (state, action) => {

@@ -136,6 +136,7 @@ const Login = () => {
       if (data.success) {
         toast.success(data?.message || "OTP verified Successfully");
         setOtpSent(false);
+        dispatch(setUser(data?.user));
         navigate("/dashboard");
         setFormData({
           fullName: "",
@@ -190,7 +191,7 @@ const Login = () => {
       id: "owner",
       icon: ChefHat,
       label: "Shop Owner",
-      color: "bg-green-500",
+      color: "bg-gradient-green",
     },
     {
       id: "deliveryBoy",
@@ -205,7 +206,7 @@ const Login = () => {
       <div
         className={`hidden lg:flex lg:w-1/2 bg-gradient-hero relative overflow-hidden
   transition-all duration-500 ease-in-out
-  ${isLogin ? "translate-x-0 opacity-100" : "translate-x-full opacity-100"}`}
+  ${isLogin ? "translate-x-0 opacity-100" : "md:translate-x-full opacity-100"}`}
       >
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=')] opacity-50"></div>
         <div className="relative z-10 flex flex-col justify-center items-center text-center p-12">
@@ -254,7 +255,7 @@ const Login = () => {
       <div
         className={`w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12
   transition-all duration-500 ease-in-out
-  ${isLogin ? "translate-x-0 opacity-100" : "-translate-x-full opacity-100"}`}
+  ${isLogin ? "translate-x-0 opacity-100" : "md:-translate-x-full opacity-100"}`}
       >
         <div className="w-full max-w-md">
           {/* Back Button */}
@@ -305,9 +306,9 @@ const Login = () => {
                     onClick={() => handleChange("role", role.id)}
                     key={role.id}
                     type="button"
-                    className={`p-2 border-2 transition-all duration-200 ${
-                      role.id === role.id
-                        ? "border-primary bg-primary/5"
+                    className={`p-2 border-2 transition-all duration-200 cursor-pointer ${
+                      formData.role === role.id
+                        ? "border-primary bg-green-100"
                         : "border-border hover:border-primary/50"
                     }
                     `}
@@ -482,7 +483,7 @@ const Login = () => {
             }}
             className="w-full bg-gradient-hero py-2 cursor-pointer mt-2"
           >
-             {isLogin ? "Google Login" : "Google Register"}
+            {isLogin ? "Google Login" : "Google Register"}
           </button>
         </div>
       </div>

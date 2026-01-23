@@ -127,8 +127,8 @@ const EditItemModal = ({ item, setEditItem }) => {
             >
               <option value="">Select Category</option>
               {category.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+                <option key={cat.label} value={cat.label}>
+                  {cat.label}
                 </option>
               ))}
             </select>
