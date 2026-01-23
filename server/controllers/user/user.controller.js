@@ -2,7 +2,7 @@ import normalizeUser from "../../helper/normalizeUser.js";
 import userModel from "../../models/auth/auth.model.js";
 
 export const getUserProfile = async (req, res) => {
-  const userId = req.userId;
+  const { userId } = req.user;
   if (!userId) {
     return res
       .status(400)
@@ -29,7 +29,7 @@ export const getUserProfile = async (req, res) => {
 };
 
 export const updateUserProfile = async (req, res) => {
-  const userId = req.userId;
+  const { userId } = req.user;
   const { fullName, password, role } = req.body;
   if (!userId) {
     return res

@@ -124,6 +124,23 @@ export const verfyOtp = async (req, res) => {
   const emailService = new Email(user);
   await emailService.sendWelcome();
 
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefeshToken(user);
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
   user = normalizeUser(user);
 
   res
